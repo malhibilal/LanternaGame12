@@ -8,10 +8,14 @@ import com.googlecode.lanterna.terminal.Terminal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
+        String s;
+
+        do {
             try {
                 startGame();
 
@@ -21,52 +25,56 @@ public class Main {
             } finally {
                 System.out.println("Game over!");
             }
+            System.out.println("would yo like to start over y/n");
+            Scanner sc = new Scanner(System.in);
+            s = sc.next();
 
 
-
-        }
-
+        } while (s.equals("y"));
+    }
         private static void startGame() throws IOException, InterruptedException {
 
             Terminal terminal = createTerminal();
             Player player = createPlayer();
             final char block = '\u2588';
+
+
             // creating obstacles
             // outer boundary of the game with obstacles
-            Position[] obsticles1 = new Position[80];
+            //List< Position> obstaclesForPlayers = new ArrayList<>();
+            List< Position> obsticles1 = new ArrayList<>();
             for(int i = 0;i<80;i++) {
-                obsticles1[i] = new Position(i, 0);
+                obsticles1.add( new Position(i, 0));
             }
-            Position[] obsticles2 = new Position[80];
+            List< Position> obsticles2 = new ArrayList<>();
             for(int i = 0;i<80;i++) {
-                obsticles2[i] = new Position(0, i);
+                obsticles2. add( new Position(i, 0));
             }
-            Position[] obsticles3 = new Position[80];
+            List< Position> obsticles3 = new ArrayList<>();
             for(int i = 0;i<80;i++) {
-                obsticles3[i] = new Position(80, i);
+                obsticles3.add(new Position(80, i));
             }
-            Position[] obsticles4 = new Position[80];
+            List< Position> obsticles4 = new ArrayList<>();
             for(int i = 0;i<80;i++) {
-                obsticles4[i] = new Position(i, 80);
+                obsticles4.add( new Position(i, 80));
             }
 
             // inner obstacles designing
-
-            Position[] obsticles5 = new Position[10];
+            List< Position> obsticles5 = new ArrayList<>();
             for(int i = 0;i<10;i++){
-                obsticles5[i] = new Position(28,10+i);
+                obsticles5.add(new Position(28,10+i));
             }
-            Position[] obsticles6 = new Position[10];
+            List< Position> obsticles6 = new ArrayList<>();
             for(int i = 0;i<10;i++){
-                obsticles6[i] = new Position(19+i,5);
+                obsticles6.add( new Position(19+i,5));
             }
-            Position[] obsticles7 = new Position[10];
+            List< Position> obsticles7 = new ArrayList<>();
             for(int i = 0;i<10;i++){
-                obsticles7[i] = new Position(60,4+i);
+                obsticles7.add(new Position(60,4+i));
             }
-            Position[] obsticles8 = new Position[13];
+            List< Position> obsticles8 = new ArrayList<>();
             for(int i = 0;i<13;i++){
-                obsticles8[i] = new Position(45,4+i);
+                obsticles8.add( new Position(45,4+i));
             }
 
 // Use obsticles array to print to lanterna
@@ -106,6 +114,32 @@ public class Main {
             for (Position p : obsticles8) {
                 terminal.setCursorPosition(p.x, p.y);
                 terminal.putCharacter(block);
+            }
+            terminal.flush();
+            List <Position> obsticles = new ArrayList<>();
+            obsticles.addAll(obsticles1);
+            obsticles.addAll(obsticles2);
+            obsticles.addAll(obsticles3);
+            obsticles.addAll(obsticles4);
+            obsticles.addAll(obsticles5);
+            obsticles.addAll(obsticles6);
+            obsticles.addAll(obsticles7);
+            obsticles.addAll(obsticles8);
+
+
+            //detect if player tries to run into obsticle
+            boolean crashIntoObsticle = false;
+            for (Position p : obsticles) {
+                if (p.x== player.getX() && p.y == player.getY()) {
+                    crashIntoObsticle = true;
+                }
+            }
+            if (crashIntoObsticle) {
+
+               //create a for loop for sending a messange
+              //  createPlayer();// just return
+                return;
+
             }
 
 
@@ -164,98 +198,9 @@ public class Main {
         }
 
         public static Player createPlayer() {
-            return new Player(10,10, 'P');
-        }
-/*
-        public static void creatingObstacle()throws IOException{
-            // DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory();
-            //Terminal terminal = terminalFactory.createTerminal();
-            //terminal.setCursorVisible(false);
-            Terminal terminal = createTerminal();
-            final char block = '\u2588';
-            // creating obstacles
-            // outer boundary of the game with obstacles
-            Position[] obsticles1 = new Position[80];
-            for(int i = 0;i<80;i++) {
-                obsticles1[i] = new Position(i, 0);
-            }
-            Position[] obsticles2 = new Position[80];
-            for(int i = 0;i<80;i++) {
-                obsticles2[i] = new Position(0, i);
-            }
-            Position[] obsticles3 = new Position[80];
-            for(int i = 0;i<80;i++) {
-                obsticles3[i] = new Position(80, i);
-            }
-            Position[] obsticles4 = new Position[80];
-            for(int i = 0;i<80;i++) {
-                obsticles4[i] = new Position(i, 80);
-            }
-
-            // inner obstacles designing
-
-            Position[] obsticles5 = new Position[10];
-            for(int i = 0;i<10;i++){
-                obsticles5[i] = new Position(28,10+i);
-            }
-            Position[] obsticles6 = new Position[10];
-            for(int i = 0;i<10;i++){
-                obsticles6[i] = new Position(19+i,5);
-            }
-            Position[] obsticles7 = new Position[10];
-            for(int i = 0;i<10;i++){
-                obsticles7[i] = new Position(60,4+i);
-            }
-            Position[] obsticles8 = new Position[13];
-            for(int i = 0;i<13;i++){
-                obsticles8[i] = new Position(45,4+i);
-            }
-
-// Use obsticles array to print to lanterna
-            for (Position p : obsticles1) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-
-            for (Position p : obsticles2) {
-                terminal.setCursorPosition(p.x,p.y);
-                terminal.putCharacter(block);
-            }
-
-            for (Position p : obsticles3) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-
-            for (Position p : obsticles4) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-            for (Position p : obsticles5) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-            for (Position p : obsticles6) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-
-            for (Position p : obsticles7) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-
-            for (Position p : obsticles8) {
-                terminal.setCursorPosition(p.x, p.y);
-                terminal.putCharacter(block);
-            }
-
-            terminal.flush();
-
-
+           return new Player(10,10,'\uF692');
         }
 
- */
 
         private static List<Monster> createMonsters() {
             List<Monster> monsters = new ArrayList<>();
@@ -295,6 +240,7 @@ public class Main {
             terminal.flush();
 
         }
+
 
         private static boolean isPlayerAlive(Player player, List<Monster> monsters) {
             for (Monster monster : monsters) {
